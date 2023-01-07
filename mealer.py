@@ -2,13 +2,6 @@ import json
 import os
 import sys
 
-# TODO:
-# - Organize shopping list by type
-# - Seed week with one recipe, then pick other recipes with shared ingredients
-# - Pick recipes instead of making list from entire directory
-# - Randomize X number of recipes from recipe directory
-# - If an ingredient only has one unit of something, use singular description
-
 shopping_dict = {}
 
 def lbs_to_ounces(lbs):
