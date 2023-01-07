@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 
 # TODO:
 # - Organize shopping list by type
@@ -32,12 +33,27 @@ def parse_recipe(recipe):
     for ingredient in recipe['ingredients']:
         parse_ingredient(ingredient)
 
-def read_recipes(path):
-    for filename in os.listdir(path):
-        file_path = os.path.join(os.path.abspath(path), filename)
+def read_recipes(args):
+    # for every arg in args, skipping first arg which is app name
+    for arg in args[1:]:
+        # check if folder
+        if not os.path.isdir(arg):
+            print(arg + " is not a folder!")
+            break
 
-        if os.path.isfile(file_path):
-            #print("Opening " + file_path)
+        # for every file in arg directory
+        for filename in os.listdir(arg):
+            file_path = os.path.join(os.path.abspath(arg), filename)
+
+            # check if file
+            if not os.path.isfile(file_path):
+                continue
+
+            # check if json file
+            if not file_path.endswith(".json"):
+                continue
+
+            print("Reading " + file_path)
             f = open(file_path)
             recipe_dict = json.load(f)
             f.close()
@@ -45,8 +61,11 @@ def read_recipes(path):
             #print("Parsing recipe " + file_path)
             parse_recipe(recipe_dict)
 
-read_recipes(".\\recipes")
+if len(sys.argv) < 2:
+    print("Arguments: python mealer <recipe folders>")
+else:
+    read_recipes(sys.argv)
 
-print("# Shopping List")
-for ingredient, info in shopping_dict.items():
-    print(f"- {info['quantity']} {info['unit']} {ingredient}")
+    print("# Shopping List")
+    for ingredient, info in shopping_dict.items():
+        print(f"- {info['quantity']} {info['unit']} {ingredient}")
